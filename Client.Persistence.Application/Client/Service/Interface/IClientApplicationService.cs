@@ -2,7 +2,7 @@
 
 namespace Client.Persistence.Application.Client.Service.Interface;
 
-public interface IClientService
+public interface IClientApplicationService
 {
     Task DeleteAsync(int id);
     Task CreateAsync(ClientDTO entity);

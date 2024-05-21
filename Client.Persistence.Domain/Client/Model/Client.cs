@@ -1,7 +1,10 @@
 ﻿
 
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Client.Persistence.Domain.Client.Model
 {
+    [Table("Client")]
     public sealed class Client
     {
         public int Id { get; set; }
@@ -22,6 +25,15 @@ namespace Client.Persistence.Domain.Client.Model
             Email = client.Email;
             Logo = client.Logo;
             PublicAreas = client.PublicAreas;
+        }
+
+        public Client(int id, string? name, string? email, string? logo, IList<PublicArea.Model.PublicArea>? publicAreas)
+        {
+            Id = id;
+            Name = name;
+            Email = email;
+            Logo = logo;
+            PublicAreas = publicAreas;
         }
     }
 }

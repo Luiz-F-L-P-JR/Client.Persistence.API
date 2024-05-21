@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Client.Persistence.Application.Client.DTO;
+using Client.Persistence.Application.Client.Service.Interface;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Client.Persistence.API.Controllers
 {
@@ -6,32 +8,39 @@ namespace Client.Persistence.API.Controllers
     [Route("api/[controller]")]
     public class ClientController : ControllerBase
     {
+        private readonly IClientApplicationService? _applicationService;
+
+        public ClientController(IClientApplicationService? applicationService)
+        {
+            _applicationService = applicationService;
+        }
+
         // GET: api/<ClientController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<string>>> Get()
+        public async Task<ActionResult<IEnumerable<ClientDTO>>> Get()
         {
-            return new string[] { "value1", "value2" };
+            return Ok();
         }
 
         // GET api/<ClientController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<string>> Get(int id)
+        public async Task<ActionResult<ClientDTO>> Get(int id)
         {
-            return "value";
+            return Ok();
         }
 
         // POST api/<ClientController>
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] string value)
+        public async Task<ActionResult> Post(ClientDTO clientDTO)
         {
             return NoContent();
         }
 
         // PUT api/<ClientController>/5
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, [FromBody] string value)
+        [HttpPut]
+        public async Task<ActionResult> Put(ClientDTO clientDTO)
         {
-            return NoContent();
+            return Ok();
         }
 
         // DELETE api/<ClientController>/5

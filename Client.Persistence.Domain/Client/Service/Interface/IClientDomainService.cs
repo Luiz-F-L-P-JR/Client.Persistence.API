@@ -1,7 +1,7 @@
 ﻿
 namespace Client.Persistence.Domain.Client.Service.Interface;
 
-public interface IClientService
+public interface IClientDomainService
 {
     Task DeleteAsync(int id);
     Task CreateAsync(Model.Client entity);

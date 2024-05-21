@@ -1,6 +1,6 @@
 ﻿namespace Client.Persistence.Domain.PublicArea.Service.Interface;
 
-public interface IPublicAreaService
+public interface IPublicAreaDomainService
 {
     Task DeleteAsync(int id);
     Task CreateAsync(Model.PublicArea entity);

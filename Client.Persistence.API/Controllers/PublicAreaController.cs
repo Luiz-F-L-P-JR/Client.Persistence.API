@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Client.Persistence.Application.PublicArea.DTO;
+using Client.Persistence.Application.PublicArea.Service.Interface;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Client.Persistence.API.Controllers
 {
@@ -6,18 +8,25 @@ namespace Client.Persistence.API.Controllers
     [Route("api/[controller]")]
     public class PublicAreaController : ControllerBase
     {
+        private readonly IPublicAreaApplicationService? _publicAreaApplicationService;
+
+        public PublicAreaController(IPublicAreaApplicationService? publicAreaApplicationService)
+        {
+            _publicAreaApplicationService = publicAreaApplicationService;
+        }
+
         // GET: api/<ClientController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<string>>> Get()
+        public async Task<ActionResult<IEnumerable<PublicAreaDTO>>> Get()
         {
-            return new string[] { "value1", "value2" };
+            return Ok();
         }
 
         // GET api/<ClientController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<string>> Get(int id)
+        public async Task<ActionResult<PublicAreaDTO>> Get(int id)
         {
-            return "value";
+            return Ok();
         }
 
         // POST api/<ClientController>
@@ -29,7 +38,7 @@ namespace Client.Persistence.API.Controllers
 
         // PUT api/<ClientController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, [FromBody] string value)
+        public async Task<ActionResult> Put(PublicAreaDTO publicAreaDTO)
         {
             return NoContent();
         }

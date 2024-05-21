@@ -2,6 +2,7 @@
 
 public sealed class PublicAreaDTO
 {
+    public int Id { get; set; }
     public string? State { get; set; }
     public string? City { get; set; }
     public string? Neighborhood { get; set; }
@@ -14,9 +15,10 @@ public sealed class PublicAreaDTO
 
     public PublicAreaDTO(PublicAreaDTO dto)
     {
-        State = dto.State;
+        Id = dto.Id;
         City = dto.City;
-        Neighborhood = dto.Neighborhood;
+        State = dto.State;
         Address = dto.Address;
+        Neighborhood = dto.Neighborhood;
     }
 }
