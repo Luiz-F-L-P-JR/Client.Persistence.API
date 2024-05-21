@@ -7,14 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Client\DTO\" />
-    <Folder Include="Client\Service\Interface\" />
-    <Folder Include="AutoMapping\" />
-    <Folder Include="PublicArea\DTO\" />
-    <Folder Include="PublicArea\Service\Interface\" />
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Client.Persistence.Data\Client.Persistence.Data.csproj" />
     <ProjectReference Include="..\Client.Persistence.Domain\Client.Persistence.Domain.csproj" />
   </ItemGroup>
 

@@ -4,7 +4,7 @@ namespace Client.Persistence.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ClientController : ControllerBase
+    public class PublicAreaController : ControllerBase
     {
         // GET: api/<ClientController>
         [HttpGet]
