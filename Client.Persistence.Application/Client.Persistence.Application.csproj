@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Client\DTO\" />
+    <Folder Include="Client\Service\Interface\" />
+    <Folder Include="AutoMapping\" />
+    <Folder Include="PublicArea\DTO\" />
+    <Folder Include="PublicArea\Service\Interface\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Client.Persistence.Domain\Client.Persistence.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
