@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Client.Persistence.API.Controllers;
+namespace Client.Persistence.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
