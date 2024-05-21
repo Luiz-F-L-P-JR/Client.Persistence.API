@@ -14,8 +14,4 @@
     <ProjectReference Include="..\Client.Persistence.Application\Client.Persistence.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Exension\" />
-  </ItemGroup>
-
 </Project>

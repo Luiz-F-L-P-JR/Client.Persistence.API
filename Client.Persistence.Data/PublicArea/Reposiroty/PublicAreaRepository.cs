@@ -1,5 +1,5 @@
 ﻿
-using Client.Persistence.Data.PublicArea.Reposiroty.Interface;
+using Client.Persistence.Domain.PublicArea.Reposiroty.Interface;
 
 namespace Client.Persistence.Data.PublicArea.Reposiroty;
 
