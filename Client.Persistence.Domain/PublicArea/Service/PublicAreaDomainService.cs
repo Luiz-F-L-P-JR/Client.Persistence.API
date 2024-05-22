@@ -13,26 +13,18 @@ public sealed class PublicAreaDomainService : IPublicAreaDomainService
         _repository = repository;
     }
 
-    public Task CreateAsync(Model.PublicArea entity)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task DeleteAsync(int id)
-    {
-        throw new NotImplementedException();
-    }
-
     public async Task<IEnumerable<Model.PublicArea>> GetAllAsync()
-        => await _repository.GetAllAsync();
+    => await _repository.GetAllAsync();
 
-    public Task<Model.PublicArea> GetAsync(int id)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<Model.PublicArea> GetAsync(int id)
+        => await _repository.GetAsync(id);
 
-    public Task UpdateAsync(Model.PublicArea entity)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task CreateAsync(Model.PublicArea entity)
+        => await _repository.CreateAsync(entity);
+
+    public async Task UpdateAsync(Model.PublicArea entity)
+        => await _repository.UpdateAsync(entity);
+
+    public async Task DeleteAsync(int id)
+        => await _repository.DeleteAsync(id);
 }

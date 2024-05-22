@@ -12,28 +12,18 @@ public sealed class ClientDomainService : IClientDomainService
         _repository = repository;
     }
 
-    public Task CreateAsync(Model.Client entity)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<IEnumerable<Model.Client>> GetAllAsync()
+    => await _repository.GetAllAsync();
 
-    public Task DeleteAsync(int id)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<Model.Client> GetAsync(int id)
+        => await _repository.GetAsync(id);
 
-    public Task<IEnumerable<Model.Client>> GetAllAsync()
-    {
-        throw new NotImplementedException();
-    }
+    public async Task CreateAsync(Model.Client entity)
+        => await _repository.CreateAsync(entity);
 
-    public Task<Model.Client> GetAsync(int id)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task UpdateAsync(Model.Client entity)
+        => await _repository.UpdateAsync(entity);
 
-    public Task UpdateAsync(Model.Client entity)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task DeleteAsync(int id)
+        => await _repository.DeleteAsync(id);
 }

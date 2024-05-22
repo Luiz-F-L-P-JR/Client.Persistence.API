@@ -5,6 +5,8 @@ using Client.Persistence.Domain.PublicArea.Reposiroty.Interface;
 using Dapper;
 using Microsoft.Extensions.Logging;
 using System.Data;
+using System.Net;
+using static Dapper.SqlMapper;
 
 namespace Client.Persistence.Data.PublicArea.Reposiroty;
 
@@ -27,48 +29,122 @@ public sealed class PublicAreaRepository : IPublicAreaRepository
 
     public async Task<IEnumerable<Domain.PublicArea.Model.PublicArea>> GetAllAsync()
     {
-        try
+        var connection = await _connection.GetSqlConnectionAsync();
+
+        var data = (
+                        await connection?
+                            .QueryAsync<List<Domain.PublicArea.Model.PublicArea>>
+                            (
+                                SP_GETALL_PUBLICAREA, 
+                                commandType: CommandType.StoredProcedure
+                            )
+                    )
+                    .FirstOrDefault();
+
+        connection.Close();
+
+        if (data is List<Domain.PublicArea.Model.PublicArea>) return data;
+
+        return Enumerable.Empty<Domain.PublicArea.Model.PublicArea>();
+
+    }
+
+    public async Task<Domain.PublicArea.Model.PublicArea> GetAsync(int id)
+    {
+        var connection = await _connection.GetSqlConnectionAsync();
+
+        DynamicParameters dynamicParameters = new();
+        dynamicParameters.Add("@id", id);
+
+        var data = (
+                     await connection.QueryAsync<Domain.PublicArea.Model.PublicArea>
+                     (
+                        SP_GET_PUBLICAREA,
+                        dynamicParameters,
+                        commandType: CommandType.StoredProcedure
+                     )
+                   ).FirstOrDefault();
+
+        connection.Close();
+
+        if (data is Domain.PublicArea.Model.PublicArea) return data;
+
+        return Enumerable.Empty<Domain.PublicArea.Model.PublicArea>().FirstOrDefault();
+    }
+
+    public async Task CreateAsync(Domain.PublicArea.Model.PublicArea entity)
+    {
+        var connection = await _connection.GetSqlConnectionAsync();
+
+        if (entity is Domain.PublicArea.Model.PublicArea)
         {
-            var connection = await _connection.GetSqlConnectionAsync();
+            DynamicParameters dynamicParameters = new();
 
-            var data = (
-                          await connection?
-                                .QueryAsync<IEnumerable<Domain.PublicArea.Model.PublicArea>>
-                                (
-                                    SP_GETALL_PUBLICAREA, 
-                                    commandType: CommandType.StoredProcedure
-                                )
-                        )
-                        ?.FirstOrDefault()?.ToList();
+            dynamicParameters.Add("@city", entity.City);
+            dynamicParameters.Add("@state", entity.State);
+            dynamicParameters.Add("@address", entity.Address);
+            dynamicParameters.Add("@id_client", entity.IdCliente);
+            dynamicParameters.Add("@neighborhood", entity.Neighborhood);
 
-            return data;
+            await connection.ExecuteAsync(SP_CREATE_PUBLICAREA, dynamicParameters, commandType: CommandType.StoredProcedure);
+
+            connection.Close();
         }
-        catch (Exception e)
+        else
         {
-
-            _logger?.LogInformation($"Message: {e.Message}| Trace: {e.StackTrace} |{DateTime.UtcNow}");
-
-            throw e;
+            _logger?.LogError(null, "Null object reference or withou enough information");
+            throw new HttpRequestException("Null object reference or withou enough information", null, HttpStatusCode.BadRequest);
         }
     }
 
-    public Task<Domain.PublicArea.Model.PublicArea> GetAsync(int id)
+    public async Task UpdateAsync(Domain.PublicArea.Model.PublicArea entity)
     {
-        throw new NotImplementedException();
+        var connection = await _connection.GetSqlConnectionAsync();
+
+        bool isValidEntity = this.GetAllAsync().Result.ToList().Exists(e => e.Id == entity.Id);
+
+        if (isValidEntity)
+        {
+            DynamicParameters dynamicParameters = new();
+
+            dynamicParameters.Add("@id", entity.Id);
+            dynamicParameters.Add("@city", entity.City);
+            dynamicParameters.Add("@state", entity.State);
+            dynamicParameters.Add("@address", entity.Address);
+            dynamicParameters.Add("@id_client", entity.IdCliente);
+            dynamicParameters.Add("@neighborhood", entity.Neighborhood);
+
+            await connection.ExecuteAsync(SP_UPDATE_PUBLICAREA, dynamicParameters, commandType: CommandType.StoredProcedure);
+
+            connection.Close();
+        }
+        else
+        {
+            _logger?.LogError(null, "The public area searched doesn't exist.");
+            throw new HttpRequestException("The public area searched doesn't exist.", null, HttpStatusCode.BadRequest);
+        }
     }
 
-    public Task CreateAsync(Domain.PublicArea.Model.PublicArea entity)
+    public async Task DeleteAsync(int id)
     {
-        throw new NotImplementedException();
-    }
+        var connection = await _connection.GetSqlConnectionAsync();
 
-    public Task UpdateAsync(Domain.PublicArea.Model.PublicArea entity)
-    {
-        throw new NotImplementedException();
-    }
+        bool isValidEntity = this.GetAllAsync().Result.ToList().Exists(e => e.Id == id);
 
-    public Task DeleteAsync(int id)
-    {
-        throw new NotImplementedException();
+        if (isValidEntity)
+        {
+            DynamicParameters dynamicParameters = new();
+
+            dynamicParameters.Add("@id", id);
+
+            await connection.ExecuteAsync(SP_DELETE_PUBLICAREA, dynamicParameters, commandType: CommandType.StoredProcedure);
+
+            connection.Close();
+        }
+        else
+        {
+            _logger?.LogError(null, "The public area searched doesn't exist.");
+            throw new HttpRequestException("The public area searched doesn't exist.", null, HttpStatusCode.BadRequest);
+        }
     }
 }

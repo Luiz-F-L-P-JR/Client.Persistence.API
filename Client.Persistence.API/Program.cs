@@ -1,4 +1,6 @@
 using Client.Persistence.API.Exension.ExceptionFilter;
+using Client.Persistence.API.Exension.IoC;
+using Client.Persistence.Application.AutoMapping;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +17,9 @@ builder.Services.AddControllers(
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDependencyInjection();
+
+builder.Services.AddAutoMapper(typeof(AutoMappingProfile));
 
 var app = builder.Build();
 

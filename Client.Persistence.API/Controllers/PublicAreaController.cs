@@ -8,11 +8,11 @@ namespace Client.Persistence.API.Controllers
     [Route("api/[controller]")]
     public class PublicAreaController : ControllerBase
     {
-        private readonly IPublicAreaApplicationService? _publicAreaApplicationService;
+        private readonly IPublicAreaApplicationService? _applicationService;
 
-        public PublicAreaController(IPublicAreaApplicationService? publicAreaApplicationService)
+        public PublicAreaController(IPublicAreaApplicationService? applicationService)
         {
-            _publicAreaApplicationService = publicAreaApplicationService;
+            _applicationService = applicationService;
         }
 
         // GET: api/<ClientController>
@@ -22,7 +22,9 @@ namespace Client.Persistence.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<PublicAreaDTO>>> Get()
         {
-            return Ok();
+            var publicAreas = await _applicationService.GetAllAsync();
+
+            return publicAreas is List<PublicAreaDTO> ? Ok(publicAreas.ToList()) : NotFound();
         }
 
         // GET api/<ClientController>/5
@@ -30,9 +32,11 @@ namespace Client.Persistence.API.Controllers
         [ProducesResponseType(typeof(PublicAreaDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<PublicAreaDTO>> Get(int id)
+        public async Task<ActionResult<PublicAreaDTO>> GetbyId(int id)
         {
-            return Ok();
+            var publicArea = await _applicationService.GetAsync(id);
+
+            return publicArea is PublicAreaDTO ? Ok(publicArea) : NotFound();
         }
 
         // POST api/<ClientController>
@@ -42,7 +46,13 @@ namespace Client.Persistence.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Post(PublicAreaDTO publicAreaDTO)
         {
-            return NoContent();
+            if(publicAreaDTO is PublicAreaDTO)
+            {
+                await _applicationService.CreateAsync(publicAreaDTO);
+                return NoContent();
+            }
+
+            return NotFound();
         }
 
         // PUT api/<ClientController>/5
@@ -52,7 +62,13 @@ namespace Client.Persistence.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Put(PublicAreaDTO publicAreaDTO)
         {
-            return NoContent();
+            if (publicAreaDTO is PublicAreaDTO)
+            {
+                await _applicationService.UpdateAsync(publicAreaDTO);
+                return NoContent();
+            }
+
+            return NotFound();
         }
 
         // DELETE api/<ClientController>/5
@@ -62,7 +78,13 @@ namespace Client.Persistence.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Delete(int id)
         {
-            return NoContent();
+            if (id > 0)
+            {
+                await _applicationService.DeleteAsync(id);
+                return NoContent();
+            }
+
+            return NotFound();
         }
     }
 }

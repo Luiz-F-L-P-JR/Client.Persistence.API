@@ -22,7 +22,9 @@ namespace Client.Persistence.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<ClientDTO>>> Get()
         {
-            return Ok();
+            var clients = await _applicationService.GetAllAsync();
+
+            return clients is List<ClientDTO> ? Ok(clients.ToList()) : NotFound();
         }
 
         // GET api/<ClientController>/5
@@ -32,7 +34,9 @@ namespace Client.Persistence.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ClientDTO>> Get(int id)
         {
-            return Ok();
+            var client = await _applicationService.GetAsync(id);
+
+            return client is ClientDTO ? Ok(client) : NotFound();
         }
 
         // POST api/<ClientController>
@@ -42,7 +46,13 @@ namespace Client.Persistence.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Post(ClientDTO clientDTO)
         {
-            return NoContent();
+            if (clientDTO is ClientDTO)
+            {
+                await _applicationService.CreateAsync(clientDTO);
+                return NoContent();
+            }
+
+            return NotFound();
         }
 
         // PUT api/<ClientController>/5
@@ -52,7 +62,13 @@ namespace Client.Persistence.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Put(ClientDTO clientDTO)
         {
-            return Ok();
+            if (clientDTO is ClientDTO)
+            {
+                await _applicationService.UpdateAsync(clientDTO);
+                return NoContent();
+            }
+
+            return NotFound();
         }
 
         // DELETE api/<ClientController>/5
@@ -62,7 +78,13 @@ namespace Client.Persistence.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Delete(int id)
         {
-            return NoContent();
+            if (id > 0)
+            {
+                await _applicationService.DeleteAsync(id);
+                return NoContent();
+            }
+
+            return NotFound();
         }
     }
 }

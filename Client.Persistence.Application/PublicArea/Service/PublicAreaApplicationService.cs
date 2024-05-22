@@ -17,16 +17,6 @@ public sealed class PublicAreaApplicationService : IPublicAreaApplicationService
         _domainService = domainService;
     }
 
-    public Task CreateAsync(PublicAreaDTO entity)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task DeleteAsync(int id)
-    {
-        throw new NotImplementedException();
-    }
-
     public async Task<IEnumerable<PublicAreaDTO>> GetAllAsync()
     {
         var publicArea = await _domainService.GetAllAsync();
@@ -36,13 +26,29 @@ public sealed class PublicAreaApplicationService : IPublicAreaApplicationService
         return publicAreaDto;
     }
 
-    public Task<PublicAreaDTO> GetAsync(int id)
+    public async Task<PublicAreaDTO> GetAsync(int id)
     {
-        throw new NotImplementedException();
+        var publicArea = await _domainService.GetAsync(id);
+
+        var publicAreaDto = _mapper.Map<PublicAreaDTO>(publicArea);
+
+        return publicAreaDto;
     }
 
-    public Task UpdateAsync(PublicAreaDTO entity)
+    public async Task CreateAsync(PublicAreaDTO entity)
     {
-        throw new NotImplementedException();
+        var publicArea = _mapper.Map<Domain.PublicArea.Model.PublicArea>(entity);
+
+        await _domainService.CreateAsync(publicArea);
     }
+
+    public async Task UpdateAsync(PublicAreaDTO entity)
+    {
+        var publicArea = _mapper.Map<Domain.PublicArea.Model.PublicArea>(entity);
+
+        await _domainService.UpdateAsync(publicArea);
+    }
+
+    public async Task DeleteAsync(int id)
+        => await _domainService.DeleteAsync(id);
 }

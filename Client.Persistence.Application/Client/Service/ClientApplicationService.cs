@@ -1,4 +1,5 @@
-﻿using Client.Persistence.Application.Client.DTO;
+﻿using AutoMapper;
+using Client.Persistence.Application.Client.DTO;
 using Client.Persistence.Application.Client.Service.Interface;
 using Client.Persistence.Domain.Client.Service.Interface;
 
@@ -6,35 +7,47 @@ namespace Client.Persistence.Application.Client.Service;
 
 public sealed class ClientApplicationService : IClientApplicationService
 {
+    private readonly IMapper _mapper;
     private readonly IClientDomainService _domainService;
 
-    public ClientApplicationService(IClientDomainService domainService)
+    public ClientApplicationService(IMapper mapper, IClientDomainService domainService)
     {
+        _mapper = mapper;
         _domainService = domainService;
     }
 
-    public Task CreateAsync(ClientDTO entity)
+    public async Task<IEnumerable<ClientDTO>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        var clients = await _domainService.GetAllAsync();
+
+        var clientsDto = _mapper.Map<IEnumerable<ClientDTO>>(clients).ToList();
+
+        return clientsDto;
     }
 
-    public Task DeleteAsync(int id)
+    public async Task<ClientDTO> GetAsync(int id)
     {
-        throw new NotImplementedException();
+        var client = await _domainService.GetAsync(id);
+
+        var clientDto = _mapper.Map<ClientDTO>(client);
+
+        return clientDto;
     }
 
-    public Task<IEnumerable<ClientDTO>> GetAllAsync()
+    public async Task CreateAsync(ClientDTO entity)
     {
-        throw new NotImplementedException();
+        var client = _mapper.Map<Domain.Client.Model.Client>(entity);
+
+        await _domainService.CreateAsync(client);
     }
 
-    public Task<ClientDTO> GetAsync(int id)
+    public async Task UpdateAsync(ClientDTO entity)
     {
-        throw new NotImplementedException();
+        var client = _mapper.Map<Domain.Client.Model.Client>(entity);
+
+        await _domainService.UpdateAsync(client);
     }
 
-    public Task UpdateAsync(ClientDTO entity)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task DeleteAsync(int id)
+        => await _domainService.DeleteAsync(id);
 }

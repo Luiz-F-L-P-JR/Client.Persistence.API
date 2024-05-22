@@ -3,6 +3,8 @@ using Client.Persistence.Application.Client.Service.Interface;
 using Client.Persistence.Application.PublicArea.Service;
 using Client.Persistence.Application.PublicArea.Service.Interface;
 using Client.Persistence.Data.Client.Reposiroty;
+using Client.Persistence.Data.DbConnection;
+using Client.Persistence.Data.DbConnection.Interface;
 using Client.Persistence.Data.PublicArea.Reposiroty;
 using Client.Persistence.Domain.Client.Reposiroty.Interface;
 using Client.Persistence.Domain.Client.Service;
@@ -28,6 +30,10 @@ namespace Client.Persistence.API.Exension.IoC
             services.AddScoped<IPublicAreaRepository, PublicAreaRepository>();
             services.AddScoped<IPublicAreaDomainService, PublicAreaDomainService>();
             services.AddScoped<IPublicAreaApplicationService, PublicAreaApplicationService>();
+            #endregion
+
+            #region Db Connection Injection
+            services.AddSingleton<IDbClientPersistenceConnection, DbClientPersistenceConnection>();
             #endregion
         }
     }
