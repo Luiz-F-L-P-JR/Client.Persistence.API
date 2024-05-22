@@ -23,10 +23,8 @@ public sealed class PublicAreaDomainService : IPublicAreaDomainService
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<Model.PublicArea>> GetAllAsync()
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<IEnumerable<Model.PublicArea>> GetAllAsync()
+        => await _repository.GetAllAsync();
 
     public Task<Model.PublicArea> GetAsync(int id)
     {

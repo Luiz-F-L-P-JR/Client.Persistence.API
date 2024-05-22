@@ -18,13 +18,17 @@ namespace Client.Persistence.API.Exension.IoC
         public static void AddDependencyInjection(this IServiceCollection services)
         {
 
-            services.AddScoped<ClientRepository, IClientRepository>();
-            services.AddScoped<ClientDomainService, IClientDomainService>();
-            services.AddScoped<ClientApplicationService, IClientApplicationService>();
+            #region Client Injection
+            services.AddScoped<IClientRepository, ClientRepository>();
+            services.AddScoped<IClientDomainService, ClientDomainService>();
+            services.AddScoped<IClientApplicationService, ClientApplicationService>();
+            #endregion
 
-            services.AddScoped<PublicAreaRepository, IPublicAreaRepository>();
-            services.AddScoped<PublicAreaDomainService, IPublicAreaDomainService>();
-            services.AddScoped<PublicAreaApplicationService, IPublicAreaApplicationService>();
+            #region PublicArea Injection
+            services.AddScoped<IPublicAreaRepository, PublicAreaRepository>();
+            services.AddScoped<IPublicAreaDomainService, PublicAreaDomainService>();
+            services.AddScoped<IPublicAreaApplicationService, PublicAreaApplicationService>();
+            #endregion
         }
     }
 }

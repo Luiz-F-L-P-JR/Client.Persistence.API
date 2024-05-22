@@ -1,4 +1,5 @@
 ﻿
+using AutoMapper;
 using Client.Persistence.Application.PublicArea.DTO;
 using Client.Persistence.Application.PublicArea.Service.Interface;
 using Client.Persistence.Domain.PublicArea.Service.Interface;
@@ -7,10 +8,12 @@ namespace Client.Persistence.Application.PublicArea.Service;
 
 public sealed class PublicAreaApplicationService : IPublicAreaApplicationService
 {
+    private readonly IMapper _mapper;
     private readonly IPublicAreaDomainService _domainService;
 
-    public PublicAreaApplicationService(IPublicAreaDomainService domainService)
+    public PublicAreaApplicationService(IMapper mapper, IPublicAreaDomainService domainService)
     {
+        _mapper = mapper;
         _domainService = domainService;
     }
 
@@ -24,9 +27,13 @@ public sealed class PublicAreaApplicationService : IPublicAreaApplicationService
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<PublicAreaDTO>> GetAllAsync()
+    public async Task<IEnumerable<PublicAreaDTO>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        var publicArea = await _domainService.GetAllAsync();
+
+        var publicAreaDto = _mapper.Map<IEnumerable<PublicAreaDTO>>(publicArea).ToList();
+
+        return publicAreaDto;
     }
 
     public Task<PublicAreaDTO> GetAsync(int id)

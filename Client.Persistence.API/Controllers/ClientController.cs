@@ -17,6 +17,9 @@ namespace Client.Persistence.API.Controllers
 
         // GET: api/<ClientController>
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<ClientDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<ClientDTO>>> Get()
         {
             return Ok();
@@ -24,6 +27,9 @@ namespace Client.Persistence.API.Controllers
 
         // GET api/<ClientController>/5
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(ClientDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ClientDTO>> Get(int id)
         {
             return Ok();
@@ -31,6 +37,9 @@ namespace Client.Persistence.API.Controllers
 
         // POST api/<ClientController>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Post(ClientDTO clientDTO)
         {
             return NoContent();
@@ -38,6 +47,9 @@ namespace Client.Persistence.API.Controllers
 
         // PUT api/<ClientController>/5
         [HttpPut]
+        [ProducesResponseType(typeof(ClientDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Put(ClientDTO clientDTO)
         {
             return Ok();
@@ -45,6 +57,9 @@ namespace Client.Persistence.API.Controllers
 
         // DELETE api/<ClientController>/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Delete(int id)
         {
             return NoContent();
