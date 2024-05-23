@@ -31,21 +31,23 @@ public sealed class PublicAreaRepository : IPublicAreaRepository
     {
         var connection = await _connection.GetSqlConnectionAsync();
 
-        var data = (
-                        await connection?
-                            .QueryAsync<List<Domain.PublicArea.Model.PublicArea>>
-                            (
-                                SP_GETALL_PUBLICAREA, 
-                                commandType: CommandType.StoredProcedure
-                            )
-                    )
-                    .FirstOrDefault();
+        var data = 
+        (
+            await connection?
+                .QueryAsync<Domain.PublicArea.Model.PublicArea>
+                (
+                    SP_GETALL_PUBLICAREA, 
+                    commandType: CommandType.StoredProcedure
+                )
+        )
+        ?.ToList();
 
         connection.Close();
 
         if (data is List<Domain.PublicArea.Model.PublicArea>) return data;
 
-        return Enumerable.Empty<Domain.PublicArea.Model.PublicArea>();
+        _logger?.LogError(null, "No data found. Try again.");
+        throw new HttpRequestException("No data found. Try again.", null, HttpStatusCode.BadRequest);
 
     }
 
@@ -69,7 +71,8 @@ public sealed class PublicAreaRepository : IPublicAreaRepository
 
         if (data is Domain.PublicArea.Model.PublicArea) return data;
 
-        return Enumerable.Empty<Domain.PublicArea.Model.PublicArea>().FirstOrDefault();
+        _logger?.LogError(null, "This public area may not exist. Try again with another public area identification.");
+        throw new HttpRequestException("This public area may not exist. Try again with another public area identification.", null, HttpStatusCode.BadRequest);
     }
 
     public async Task CreateAsync(Domain.PublicArea.Model.PublicArea entity)

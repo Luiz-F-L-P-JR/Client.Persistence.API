@@ -18,6 +18,12 @@ public sealed class ClientDomainService : IClientDomainService
     public async Task<Model.Client> GetAsync(int id)
         => await _repository.GetAsync(id);
 
+    public async Task<Model.Client> GetWithPublicAreaAsync(int id)
+        => await _repository.GetWithPublicAreaAsync(id);
+
+    public async Task<IEnumerable<Model.Client>> GetAllWithPublicAreaAsync()
+        => await _repository.GetAllWithPublicAreaAsync();
+
     public async Task CreateAsync(Model.Client entity)
         => await _repository.CreateAsync(entity);
 

@@ -1,4 +1,5 @@
 ﻿using Client.Persistence.Application.PublicArea.DTO;
+using System.Text.Json.Serialization;
 
 namespace Client.Persistence.Application.Client.DTO;
 

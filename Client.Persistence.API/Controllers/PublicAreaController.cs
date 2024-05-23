@@ -56,7 +56,7 @@ namespace Client.Persistence.API.Controllers
         }
 
         // PUT api/<ClientController>/5
-        [HttpPut("{id}")]
+        [HttpPut()]
         [ProducesResponseType(typeof(PublicAreaDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

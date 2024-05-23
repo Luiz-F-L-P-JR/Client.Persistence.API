@@ -17,6 +17,7 @@ public sealed class ClientRepository : IClientRepository
     const string? SP_CREATE_CLIENT = "dbo.SP_CREATE_CLIENT";
     const string? SP_UPDATE_CLIENT = "dbo.SP_UPDATE_CLIENT";
     const string? SP_DELETE_CLIENT = "dbo.SP_DELETE_CLIENT";
+    const string? SP_CLIENT_EMAIL_REPEATED = "dbo.SP_CLIENT_EMAIL_REPEATED";
     const string? SP_GET_CLIENT_AND_PUBLCAREA = "dbo.SP_GET_CLIENT_AND_PUBLCAREA";
     const string? SP_GETALL_CLIENT_AND_PUBLCAREA = "dbo.SP_GETALL_CLIENT_AND_PUBLCAREA";
 
@@ -33,15 +34,12 @@ public sealed class ClientRepository : IClientRepository
     {
         var connection = await _connection.GetSqlConnectionAsync();
 
-        var data = (
-                        await connection?
-                            .QueryAsync<List<Domain.Client.Model.Client>>
-                            (
-                                SP_GETALL_CLIENT,
-                                commandType: CommandType.StoredProcedure
-                            )
-                    )
-                    ?.FirstOrDefault();
+        var data = (await connection?.QueryAsync<Domain.Client.Model.Client>
+                        (
+                            SP_GETALL_CLIENT,
+                            commandType: CommandType.StoredProcedure
+                        )
+                   )?.ToList();
 
         connection.Close();
 
@@ -57,14 +55,70 @@ public sealed class ClientRepository : IClientRepository
         DynamicParameters dynamicParameters = new();
         dynamicParameters.Add( "@id", id );
 
-        var data = (
-                     await connection.QueryAsync<Domain.Client.Model.Client>
+        var data = (await connection.QueryAsync<Domain.Client.Model.Client>
                      (
                         SP_GET_CLIENT, 
                         dynamicParameters, 
                         commandType: CommandType.StoredProcedure
                      )
-                   ).FirstOrDefault();
+                   )?.FirstOrDefault();
+
+        connection.Close();
+
+        if (data is Domain.Client.Model.Client) return data;
+
+        return Enumerable.Empty<Domain.Client.Model.Client>().FirstOrDefault();
+    }
+
+    public async Task<IEnumerable<Domain.Client.Model.Client>> GetAllWithPublicAreaAsync()
+    {
+        var connection = await _connection.GetSqlConnectionAsync();
+
+        var data = (await connection?.QueryAsync<Domain.Client.Model.Client>
+                        (
+                            SP_GETALL_CLIENT_AND_PUBLCAREA,
+                            commandType: CommandType.StoredProcedure
+                        )
+                   )?.ToList();
+
+        var publicAreas = (await connection.QueryAsync<Domain.PublicArea.Model.PublicArea>
+                     (
+                        SP_GETALL_CLIENT_AND_PUBLCAREA,
+                        commandType: CommandType.StoredProcedure
+                     )
+                   )?.ToList();
+
+        connection.Close();
+
+        if (data is List<Domain.Client.Model.Client>) return data;
+
+        return Enumerable.Empty<Domain.Client.Model.Client>();
+    }
+
+    public async Task<Domain.Client.Model.Client> GetWithPublicAreaAsync(int id)
+    {
+        var connection = await _connection.GetSqlConnectionAsync();
+
+        DynamicParameters dynamicParameters = new();
+        dynamicParameters.Add("@id", id);
+
+        var data = (await connection.QueryAsync<Domain.Client.Model.Client>
+                     (
+                        SP_GET_CLIENT_AND_PUBLCAREA,
+                        dynamicParameters,
+                        commandType: CommandType.StoredProcedure
+                     )
+                   )?.FirstOrDefault();
+
+        var publicAreas = (await connection.QueryAsync<Domain.PublicArea.Model.PublicArea>
+                             (
+                                SP_GET_CLIENT_AND_PUBLCAREA,
+                                dynamicParameters,
+                                commandType: CommandType.StoredProcedure
+                             )
+                           )?.ToList();
+
+        data.PublicAreas = publicAreas;
 
         connection.Close();
 
@@ -76,6 +130,11 @@ public sealed class ClientRepository : IClientRepository
     public async Task CreateAsync(Domain.Client.Model.Client entity)
     {
         var connection = await _connection.GetSqlConnectionAsync();
+
+        bool isEmailRepeated = await isEmailRepeatedAsync(entity.Name, entity.Email);
+
+        if (isEmailRepeated)
+            throw new HttpRequestException("Null object reference or withou enough information", null, HttpStatusCode.BadRequest);
 
         if ( entity is Domain.Client.Model.Client)
         {
@@ -143,5 +202,29 @@ public sealed class ClientRepository : IClientRepository
             throw new HttpRequestException("The client searched doesn't exist.", null, HttpStatusCode.BadRequest);
         }
 
+    }
+
+    private async Task<bool> isEmailRepeatedAsync(string name, string email)
+    {
+        var connection = await _connection.GetSqlConnectionAsync();
+
+        DynamicParameters dynamicParameters = new();
+
+        dynamicParameters.Add("@name", name);
+        dynamicParameters.Add("@email", email);
+
+        var data = ( await connection.QueryAsync<int>
+                     (
+                        SP_CLIENT_EMAIL_REPEATED,
+                        dynamicParameters,
+                        commandType: CommandType.StoredProcedure
+                     )
+                   )?.FirstOrDefault();
+
+        connection.Close();
+
+        if (data > 0) return true;
+
+        return false;
     }
 }

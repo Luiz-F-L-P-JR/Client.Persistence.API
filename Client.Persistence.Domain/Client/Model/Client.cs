@@ -26,14 +26,5 @@ namespace Client.Persistence.Domain.Client.Model
             Logo = client.Logo;
             PublicAreas = client.PublicAreas;
         }
-
-        public Client(int id, string? name, string? email, string? logo, IList<PublicArea.Model.PublicArea>? publicAreas)
-        {
-            Id = id;
-            Name = name;
-            Email = email;
-            Logo = logo;
-            PublicAreas = publicAreas;
-        }
     }
 }

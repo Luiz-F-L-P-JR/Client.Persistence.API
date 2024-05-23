@@ -34,6 +34,24 @@ public sealed class ClientApplicationService : IClientApplicationService
         return clientDto;
     }
 
+    public async Task<ClientDTO> GetWithPublicAreaAsync(int id)
+    {
+        var client = await _domainService.GetWithPublicAreaAsync(id);
+
+        var clientDto = _mapper.Map<ClientDTO>(client);
+
+        return clientDto;
+    }
+
+    public async Task<IEnumerable<ClientDTO>> GetAllWithPublicAreaAsync()
+    {
+        var clients = await _domainService.GetAllWithPublicAreaAsync();
+
+        var clientsDto = _mapper.Map<IEnumerable<ClientDTO>>(clients).ToList();
+
+        return clientsDto;
+    }
+
     public async Task CreateAsync(ClientDTO entity)
     {
         var client = _mapper.Map<Domain.Client.Model.Client>(entity);

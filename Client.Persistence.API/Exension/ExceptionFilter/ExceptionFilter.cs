@@ -15,11 +15,12 @@ namespace Client.Persistence.API.Exension.ExceptionFilter
         //Method of the "IExceptionFilter", which is called autometically when an unhandled exception occurs during the processing of a request.
         public void OnException(ExceptionContext context)
         {
-            _logger?.LogError(context.Exception, "An unexpected exception occurred.\n");
+            _logger?.LogError(context.Exception, "An unexpected exception occurred.");
 
             context.Result = new ObjectResult("An unexpected exception occurred!")
             {
-                StatusCode = StatusCodes.Status500InternalServerError
+                StatusCode = StatusCodes.Status500InternalServerError,
+                Value = context.Exception.Message
             };
         }
     }
