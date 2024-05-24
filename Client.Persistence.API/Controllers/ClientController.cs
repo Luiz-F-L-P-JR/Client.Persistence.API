@@ -73,7 +73,7 @@ namespace Client.Persistence.API.Controllers
             if (clientDTO is ClientDTO)
             {
                 await _applicationService.CreateAsync(clientDTO);
-                return NoContent();
+                return Created();
             }
 
             return NotFound();

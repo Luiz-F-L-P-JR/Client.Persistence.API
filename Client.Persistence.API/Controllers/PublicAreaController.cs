@@ -49,7 +49,7 @@ namespace Client.Persistence.API.Controllers
             if(publicAreaDTO is PublicAreaDTO)
             {
                 await _applicationService.CreateAsync(publicAreaDTO);
-                return NoContent();
+                return Created();
             }
 
             return NotFound();
@@ -57,7 +57,7 @@ namespace Client.Persistence.API.Controllers
 
         // PUT api/<ClientController>/5
         [HttpPut()]
-        [ProducesResponseType(typeof(PublicAreaDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Put(PublicAreaDTO publicAreaDTO)
