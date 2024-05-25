@@ -3,6 +3,7 @@
 using Client.Persistence.Data.DbConnection.Interface;
 using Client.Persistence.Domain.PublicArea.Reposiroty.Interface;
 using Dapper;
+using Dapper.Contrib.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Data;
 using System.Net;
@@ -47,7 +48,7 @@ public sealed class PublicAreaRepository : IPublicAreaRepository
         if (data is List<Domain.PublicArea.Model.PublicArea>) return data;
 
         _logger?.LogError(null, "No data found. Try again.");
-        throw new HttpRequestException("No data found. Try again.", null, HttpStatusCode.BadRequest);
+        throw new ArgumentException("No data found. Try again.");
 
     }
 
@@ -96,7 +97,7 @@ public sealed class PublicAreaRepository : IPublicAreaRepository
         else
         {
             _logger?.LogError(null, "Null object reference or withou enough information");
-            throw new HttpRequestException("Null object reference or withou enough information", null, HttpStatusCode.BadRequest);
+            throw new ArgumentException("Null object reference or withou enough information");
         }
     }
 
@@ -126,7 +127,7 @@ public sealed class PublicAreaRepository : IPublicAreaRepository
         else
         {
             _logger?.LogError(null, "The public area searched doesn't exist.");
-            throw new HttpRequestException("The public area searched doesn't exist.", null, HttpStatusCode.BadRequest);
+            throw new ArgumentException("The public area searched doesn't exist.");
         }
     }
 
@@ -134,7 +135,7 @@ public sealed class PublicAreaRepository : IPublicAreaRepository
     {
         var connection = await _connection.GetSqlConnectionAsync();
 
-        bool isValidEntity = this.GetAllAsync().Result.ToList().Exists(e => e.Id == id);
+        bool isValidEntity = (await connection.GetAllAsync<Domain.PublicArea.Model.PublicArea>()).ToList().Exists(e => e.Id == id);
 
         if (isValidEntity)
         {
@@ -149,7 +150,7 @@ public sealed class PublicAreaRepository : IPublicAreaRepository
         else
         {
             _logger?.LogError(null, "The public area searched doesn't exist.");
-            throw new HttpRequestException("The public area searched doesn't exist.", null, HttpStatusCode.BadRequest);
+            throw new ArgumentException("The public area searched doesn't exist.");
         }
     }
 }
