@@ -106,16 +106,18 @@ public sealed class PublicAreaRepository : IPublicAreaRepository
 
         bool isValidEntity = this.GetAllAsync().Result.ToList().Exists(e => e.Id == entity.Id);
 
+        var oldEntity = await this.GetAsync(entity.Id);
+
         if (isValidEntity)
         {
             DynamicParameters dynamicParameters = new();
 
             dynamicParameters.Add("@id", entity.Id);
-            dynamicParameters.Add("@city", entity.City);
-            dynamicParameters.Add("@state", entity.State);
-            dynamicParameters.Add("@address", entity.Address);
-            dynamicParameters.Add("@id_client", entity.IdCliente);
-            dynamicParameters.Add("@neighborhood", entity.Neighborhood);
+            dynamicParameters.Add("@city", entity.City is null ? oldEntity.City : entity.City);
+            dynamicParameters.Add("@state", entity.State is null ? oldEntity.State : entity.State);
+            dynamicParameters.Add("@address", entity.Address is null ? oldEntity.Address : entity.Address);
+            dynamicParameters.Add("@id_client", entity.IdCliente <= 0 ? oldEntity.IdCliente : entity.IdCliente);
+            dynamicParameters.Add("@neighborhood", entity.Neighborhood is null ? oldEntity.Neighborhood : entity.Neighborhood);
 
             await connection.ExecuteAsync(SP_UPDATE_PUBLICAREA, dynamicParameters, commandType: CommandType.StoredProcedure);
 

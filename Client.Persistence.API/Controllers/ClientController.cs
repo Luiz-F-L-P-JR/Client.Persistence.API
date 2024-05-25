@@ -39,18 +39,6 @@ namespace Client.Persistence.API.Controllers
             return client is ClientDTO ? Ok(client) : NotFound();
         }
 
-        // GET: api/<ClientController>
-        [HttpGet("publicArea")]
-        [ProducesResponseType(typeof(IEnumerable<ClientDTO>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<ClientDTO>>> GetAllWithPublicArea()
-        {
-            var clients = await _applicationService.GetAllWithPublicAreaAsync();
-
-            return clients is List<ClientDTO> ? Ok(clients.ToList()) : NotFound();
-        }
-
         // GET api/<ClientController>/5
         [HttpGet("publicArea/{id}")]
         [ProducesResponseType(typeof(ClientDTO), StatusCodes.Status200OK)]

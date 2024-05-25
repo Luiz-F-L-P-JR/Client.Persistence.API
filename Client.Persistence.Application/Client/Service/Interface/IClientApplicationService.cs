@@ -10,5 +10,4 @@ public interface IClientApplicationService
     Task<IEnumerable<ClientDTO>> GetAllAsync();
     Task<ClientDTO> GetAsync(int id);
     Task<ClientDTO> GetWithPublicAreaAsync(int id);
-    Task<IEnumerable<ClientDTO>> GetAllWithPublicAreaAsync();
 }
