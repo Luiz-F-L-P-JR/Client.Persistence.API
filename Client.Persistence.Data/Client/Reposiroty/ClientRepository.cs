@@ -78,7 +78,7 @@ public sealed class ClientRepository : IClientRepository
         var client = await connection.GetAsync<Domain.Client.Model.Client>(id);
         var publicAreas = ( await connection
                             .GetAllAsync<Domain.PublicArea.Model.PublicArea>())
-                            .Where(p => p.IdCliente == id)
+                            .Where(p => p.ClientId == id)
                             .ToList();
 
         client.PublicAreas = publicAreas;

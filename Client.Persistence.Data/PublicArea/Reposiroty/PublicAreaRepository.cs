@@ -86,7 +86,7 @@ public sealed class PublicAreaRepository : IPublicAreaRepository
             dynamicParameters.Add("@city", entity.City);
             dynamicParameters.Add("@state", entity.State);
             dynamicParameters.Add("@address", entity.Address);
-            dynamicParameters.Add("@id_client", entity.IdCliente);
+            dynamicParameters.Add("@id_client", entity.ClientId);
             dynamicParameters.Add("@neighborhood", entity.Neighborhood);
 
             await connection.ExecuteAsync(SP_CREATE_PUBLICAREA, dynamicParameters, commandType: CommandType.StoredProcedure);
@@ -116,7 +116,7 @@ public sealed class PublicAreaRepository : IPublicAreaRepository
             dynamicParameters.Add("@city", entity.City is null ? oldEntity.City : entity.City);
             dynamicParameters.Add("@state", entity.State is null ? oldEntity.State : entity.State);
             dynamicParameters.Add("@address", entity.Address is null ? oldEntity.Address : entity.Address);
-            dynamicParameters.Add("@id_client", entity.IdCliente <= 0 ? oldEntity.IdCliente : entity.IdCliente);
+            dynamicParameters.Add("@id_client", entity.ClientId <= 0 ? oldEntity.ClientId : entity.ClientId);
             dynamicParameters.Add("@neighborhood", entity.Neighborhood is null ? oldEntity.Neighborhood : entity.Neighborhood);
 
             await connection.ExecuteAsync(SP_UPDATE_PUBLICAREA, dynamicParameters, commandType: CommandType.StoredProcedure);

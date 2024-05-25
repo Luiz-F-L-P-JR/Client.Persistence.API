@@ -7,7 +7,7 @@ namespace Client.Persistence.Domain.PublicArea.Model;
 public sealed class PublicArea
 {
     public int Id { get; set; }
-    public int IdCliente { get; set; }
+    public int ClientId { get; set; }
 
     public string? City { get; set; }
     public string? State { get; set; }
@@ -25,7 +25,7 @@ public sealed class PublicArea
         City = publicArea.City;
         State = publicArea.State;
         Address = publicArea.Address;
-        IdCliente = publicArea.IdCliente;
+        ClientId = publicArea.ClientId;
         Neighborhood = publicArea.Neighborhood;
     }
 }
