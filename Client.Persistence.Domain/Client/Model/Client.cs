@@ -1,7 +1,10 @@
 ﻿
 
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Client.Persistence.Domain.Client.Model
 {
+    [Table("Client")]
     public sealed class Client
     {
         public int Id { get; set; }

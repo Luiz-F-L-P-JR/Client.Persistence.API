@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Client.Persistence.Application.Client.DTO;
+using Client.Persistence.Application.Client.Service.Interface;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Client.Persistence.API.Controllers
 {
@@ -6,39 +9,101 @@ namespace Client.Persistence.API.Controllers
     [Route("api/[controller]")]
     public class ClientController : ControllerBase
     {
-        // GET: api/<ClientController>
+        private readonly IClientApplicationService? _applicationService;
+
+        public ClientController(IClientApplicationService? applicationService)
+        {
+            _applicationService = applicationService;
+        }
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<string>>> Get()
+        [Authorize(Roles = "Menager,Admin,Regular")]
+        [ProducesResponseType(typeof(IEnumerable<ClientDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Get()
         {
-            return new string[] { "value1", "value2" };
+            var clients = await _applicationService.GetAllAsync();
+
+            return clients is List<ClientDTO> ? Ok(clients.ToList()) : NotFound();
         }
 
-        // GET api/<ClientController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<string>> Get(int id)
+        [Authorize(Roles = "Menager,Admin")]
+        [ProducesResponseType(typeof(ClientDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Get(int id)
         {
-            return "value";
+            var client = await _applicationService.GetAsync(id);
+
+            return client is ClientDTO ? Ok(client) : NotFound();
         }
 
-        // POST api/<ClientController>
+        [HttpGet("publicArea/{id}")]
+        [Authorize(Roles = "Menager,Admin")]
+        [ProducesResponseType(typeof(ClientDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetWithPublicArea(int id)
+        {
+            var client = await _applicationService.GetWithPublicAreaAsync(id);
+
+            return client is ClientDTO ? Ok(client) : NotFound();
+        }
+
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] string value)
+        [Authorize(Roles = "Menager")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Post(ClientDTO clientDTO)
         {
-            return NoContent();
+            if (clientDTO is ClientDTO)
+            {
+                await _applicationService.CreateAsync(clientDTO);
+                return Created();
+            }
+
+            return NotFound();
         }
 
-        // PUT api/<ClientController>/5
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, [FromBody] string value)
+        [HttpPut]
+        [Authorize(Roles = "Menager")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Put(ClientDTO clientDTO)
         {
-            return NoContent();
+            if (clientDTO is ClientDTO)
+            {
+                await _applicationService.UpdateAsync(clientDTO);
+                return NoContent();
+            }
+
+            return NotFound();
         }
 
-        // DELETE api/<ClientController>/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        [Authorize(Roles = "Menager")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Delete(int id)
         {
-            return NoContent();
+            if (id > 0)
+            {
+                await _applicationService.DeleteAsync(id);
+                return NoContent();
+            }
+
+            return NotFound();
         }
     }
 }

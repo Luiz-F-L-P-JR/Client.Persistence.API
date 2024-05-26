@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client.Persistence.API", "Client.Persistence.API.csproj", "{67067CDD-C6E8-4348-AAAE-69EB81F7123A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.Persistence.API", "Client.Persistence.API.csproj", "{67067CDD-C6E8-4348-AAAE-69EB81F7123A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1- API", "1- API", "{DBDAD933-4D94-4EFC-903C-39F166D3DD42}"
 EndProject
@@ -13,11 +13,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Domain", "3 - Domain", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Data", "4 - Data", "{526ABB7A-30A2-42A1-A5B1-7D09379174B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client.Persistence.Application", "..\Client.Persistence.Application\Client.Persistence.Application.csproj", "{1642B6AF-5F84-4D54-9B50-859E8886022B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.Persistence.Application", "..\Client.Persistence.Application\Client.Persistence.Application.csproj", "{1642B6AF-5F84-4D54-9B50-859E8886022B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client.Persistence.Domain", "..\Client.Persistence.Domain\Client.Persistence.Domain.csproj", "{A200C4DE-D7AD-4FC6-8401-F21A097F9F1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.Persistence.Domain", "..\Client.Persistence.Domain\Client.Persistence.Domain.csproj", "{A200C4DE-D7AD-4FC6-8401-F21A097F9F1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client.Persistence.Data", "..\Client.Persistence.Data\Client.Persistence.Data.csproj", "{6D5D7D2A-8E70-4BAC-9FB6-45CE0DC7E6C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.Persistence.Data", "..\Client.Persistence.Data\Client.Persistence.Data.csproj", "{6D5D7D2A-8E70-4BAC-9FB6-45CE0DC7E6C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
