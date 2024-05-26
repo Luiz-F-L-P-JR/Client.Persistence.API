@@ -55,13 +55,10 @@ public sealed class ClientRepository : IClientRepository
     {
         var connection = await _connection.GetSqlConnectionAsync();
 
-        DynamicParameters dynamicParameters = new();
-        dynamicParameters.Add( "@id", id );
-
         var data = (await connection.QueryAsync<Domain.Client.Model.Client>
                      (
                         SP_GET_CLIENT, 
-                        dynamicParameters, 
+                        new{ id = id }, 
                         commandType: CommandType.StoredProcedure
                      )
                    )?.FirstOrDefault();
@@ -140,14 +137,17 @@ public sealed class ClientRepository : IClientRepository
 
         if (isValidEntity)
         {
-            DynamicParameters dynamicParameters = new();
-
-            dynamicParameters.Add("@id", entity.Id);
-            dynamicParameters.Add("@name", entity.Name is null ? oldEntity.Name : entity.Name);
-            dynamicParameters.Add("@email", entity.Email is null ? oldEntity.Email : entity.Email);
-            dynamicParameters.Add("@logo", entity.Logo is null ? oldEntity.Logo : entity.Logo);
-
-            await connection.ExecuteAsync(SP_UPDATE_CLIENT, dynamicParameters, commandType: CommandType.StoredProcedure);
+            await connection.ExecuteAsync
+            (
+                SP_UPDATE_CLIENT, 
+                new {
+                    id = entity.Id,
+                    name = entity.Name is null ? oldEntity.Name : entity.Name,
+                    email = entity.Email is null ? oldEntity.Email : entity.Email,
+                    logo = entity.Logo is null ? oldEntity.Logo : entity.Logo
+                }, 
+                commandType: CommandType.StoredProcedure
+            );
 
             connection.Close();
         }
@@ -166,10 +166,7 @@ public sealed class ClientRepository : IClientRepository
 
         if (isValidEntity)
         {
-            DynamicParameters dynamicParameters = new();
-            dynamicParameters.Add("@id", id);
-
-            await connection.ExecuteAsync(SP_DELETE_CLIENT, dynamicParameters, commandType: CommandType.StoredProcedure);
+            await connection.ExecuteAsync(SP_DELETE_CLIENT, new {id = id}, commandType: CommandType.StoredProcedure);
 
             connection.Close();
         }
@@ -185,15 +182,13 @@ public sealed class ClientRepository : IClientRepository
     {
         var connection = await _connection.GetSqlConnectionAsync();
 
-        DynamicParameters dynamicParameters = new();
-
-        dynamicParameters.Add("@name", name);
-        dynamicParameters.Add("@email", email);
-
         var data = ( await connection.QueryAsync<int>
                      (
                         SP_CLIENT_EMAIL_REPEATED,
-                        dynamicParameters,
+                        new {
+                            name = name,
+                            email = email
+                        },
                         commandType: CommandType.StoredProcedure
                      )
                    )?.FirstOrDefault();

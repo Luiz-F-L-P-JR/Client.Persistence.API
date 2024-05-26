@@ -1,10 +1,13 @@
 ﻿
 namespace Client.Persistence.Domain.AuthUser.AuthRoleEnumerable
 {
+    /// <summary>
+    /// Enumerable to indicate a role.
+    /// </summary>
     public enum AuthRoles
     {
-        Menager = 1,
+        Regular = 1,
         Admin = 2,
-        Regular = 3
+        Menager = 3
     }
 }

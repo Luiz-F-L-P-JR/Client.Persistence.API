@@ -21,12 +21,12 @@ namespace Client.Persistence.API.Controllers
         }
 
         /// <summary>
-        /// Registra um novo usuário
+        /// Register a new user
         /// </summary>
         /// <param name="user">Detalhes do usuário sendo registrado</param>
-        /// <returns>Resultado da operação de registro</returns>
+        /// <returns>Returns if an user was registered or not</returns>
         [HttpPost("register")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody] User user)
         {

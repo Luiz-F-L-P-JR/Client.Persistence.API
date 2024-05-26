@@ -16,6 +16,10 @@ namespace Client.Persistence.API.Controllers
             _applicationService = applicationService;
         }
 
+        /// <summary>
+        /// Gets all the public areas
+        /// </summary>
+        /// <returns>All public areas</returns>
         [HttpGet]
         [Authorize(Roles = "Menager,Admin,Regular")]
         [ProducesResponseType(typeof(IEnumerable<PublicAreaDTO>), StatusCodes.Status200OK)]
@@ -28,6 +32,11 @@ namespace Client.Persistence.API.Controllers
             return publicAreas is List<PublicAreaDTO> ? Ok(publicAreas.ToList()) : NotFound();
         }
 
+        /// <summary>
+        /// Gets a specified public area
+        /// </summary>
+        /// <param name="id">public area identifier</param>
+        /// <returns>A public area</returns>
         [HttpGet("{id}")]
         [Authorize(Roles = "Menager,Admin")]
         [ProducesResponseType(typeof(PublicAreaDTO), StatusCodes.Status200OK)]
@@ -41,6 +50,11 @@ namespace Client.Persistence.API.Controllers
             return publicArea is PublicAreaDTO ? Ok(publicArea) : NotFound();
         }
 
+        /// <summary>
+        /// Creates a new register of a public area
+        /// </summary>
+        /// <param name="publicAreaDTO"></param>
+        /// <returns>If succeess or not</returns>
         [HttpPost]
         [Authorize(Roles = "Menager")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -58,6 +72,11 @@ namespace Client.Persistence.API.Controllers
             return NotFound();
         }
 
+        /// <summary>
+        /// Update a public area informations according to identifier
+        /// </summary>
+        /// <param name="publicAreaDTO"></param>
+        /// <returns>If success or not</returns>
         [HttpPut()]
         [Authorize(Roles = "Menager")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -75,6 +94,11 @@ namespace Client.Persistence.API.Controllers
             return NotFound();
         }
 
+        /// <summary>
+        /// Delete a public area according to identifier
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>If success or not</returns>
         [HttpDelete("{id}")]
         [Authorize(Roles = "Menager")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
