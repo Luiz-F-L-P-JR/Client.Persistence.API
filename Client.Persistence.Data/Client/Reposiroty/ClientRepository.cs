@@ -2,6 +2,7 @@
 
 using Client.Persistence.Data.DbConnection.Interface;
 using Client.Persistence.Domain.Client.Reposiroty.Interface;
+using Client.Persistence.Domain.PublicArea.Reposiroty.Interface;
 using Dapper;
 using Dapper.Contrib.Extensions;
 using Microsoft.Extensions.Logging;
@@ -19,16 +20,16 @@ public sealed class ClientRepository : IClientRepository
     const string? SP_UPDATE_CLIENT = "dbo.SP_UPDATE_CLIENT";
     const string? SP_DELETE_CLIENT = "dbo.SP_DELETE_CLIENT";
     const string? SP_CLIENT_EMAIL_REPEATED = "dbo.SP_CLIENT_EMAIL_REPEATED";
-    const string? SP_GET_CLIENT_AND_PUBLCAREA = "dbo.SP_GET_CLIENT_AND_PUBLCAREA";
-    const string? SP_GETALL_CLIENT_AND_PUBLCAREA = "dbo.SP_GETALL_CLIENT_AND_PUBLCAREA";
 
     private readonly ILogger<ClientRepository>? _logger;
     private readonly IDbClientPersistenceConnection _connection;
+    private readonly IPublicAreaRepository? _publicAreaRepository;
 
-    public ClientRepository(ILogger<ClientRepository>? logger, IDbClientPersistenceConnection connection)
+    public ClientRepository(ILogger<ClientRepository>? logger, IDbClientPersistenceConnection connection, IPublicAreaRepository? publicAreaRepository)
     {
         _logger = logger;
         _connection = connection;
+        _publicAreaRepository = publicAreaRepository;
     }
 
     public async Task<IEnumerable<Domain.Client.Model.Client>> GetAllAsync()
@@ -100,13 +101,22 @@ public sealed class ClientRepository : IClientRepository
 
         if ( entity is Domain.Client.Model.Client)
         {
-            DynamicParameters dynamicParameters = new();
+            await connection.ExecuteAsync
+            (
+                SP_CREATE_CLIENT, 
+                new{
+                        name = entity.Name, 
+                        email = entity.Email, 
+                        logo = entity.Logo
+                    }, 
+                commandType: CommandType.StoredProcedure
+            );
 
-            dynamicParameters.Add("@name", entity.Name);
-            dynamicParameters.Add("@email", entity.Email);
-            dynamicParameters.Add("@logo", entity.Logo);
+            int clientId = (await connection.GetAllAsync<Domain.Client.Model.Client>()).LastOrDefault().Id;
 
-            await connection.ExecuteAsync(SP_CREATE_CLIENT, dynamicParameters, commandType: CommandType.StoredProcedure);
+            entity.PublicAreas[0].ClientId = clientId;
+
+            await _publicAreaRepository.CreateAsync(entity.PublicAreas[0]);
 
             connection.Close();
         }

@@ -86,7 +86,7 @@ public sealed class PublicAreaRepository : IPublicAreaRepository
             dynamicParameters.Add("@city", entity.City);
             dynamicParameters.Add("@state", entity.State);
             dynamicParameters.Add("@address", entity.Address);
-            dynamicParameters.Add("@id_client", entity.ClientId);
+            dynamicParameters.Add("@clientid", entity.ClientId);
             dynamicParameters.Add("@neighborhood", entity.Neighborhood);
 
             await connection.ExecuteAsync(SP_CREATE_PUBLICAREA, dynamicParameters, commandType: CommandType.StoredProcedure);
