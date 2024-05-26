@@ -56,14 +56,11 @@ public sealed class PublicAreaRepository : IPublicAreaRepository
     {
         var connection = await _connection.GetSqlConnectionAsync();
 
-        DynamicParameters dynamicParameters = new();
-        dynamicParameters.Add("@id", id);
-
         var data = (
                      await connection.QueryAsync<Domain.PublicArea.Model.PublicArea>
                      (
                         SP_GET_PUBLICAREA,
-                        dynamicParameters,
+                        new {id = id},
                         commandType: CommandType.StoredProcedure
                      )
                    ).FirstOrDefault();
@@ -82,15 +79,18 @@ public sealed class PublicAreaRepository : IPublicAreaRepository
 
         if (entity is Domain.PublicArea.Model.PublicArea)
         {
-            DynamicParameters dynamicParameters = new();
-
-            dynamicParameters.Add("@city", entity.City);
-            dynamicParameters.Add("@state", entity.State);
-            dynamicParameters.Add("@address", entity.Address);
-            dynamicParameters.Add("@clientid", entity.ClientId);
-            dynamicParameters.Add("@neighborhood", entity.Neighborhood);
-
-            await connection.ExecuteAsync(SP_CREATE_PUBLICAREA, dynamicParameters, commandType: CommandType.StoredProcedure);
+            await connection.ExecuteAsync
+            (
+                SP_CREATE_PUBLICAREA, 
+                new {
+                    city = entity.City,
+                    state = entity.State,
+                    address = entity.Address,
+                    clientid = entity.ClientId,
+                    neighborhood = entity.Neighborhood
+                }, 
+                commandType: CommandType.StoredProcedure
+            );
 
             connection.Close();
         }
@@ -105,22 +105,25 @@ public sealed class PublicAreaRepository : IPublicAreaRepository
     {
         var connection = await _connection.GetSqlConnectionAsync();
 
-        bool isValidEntity = this.GetAllAsync().Result.ToList().Exists(e => e.Id == entity.Id);
+        bool isValidEntity = (await connection.GetAllAsync<Domain.PublicArea.Model.PublicArea>()).ToList().Exists(e => e.Id == entity.Id);
 
         var oldEntity = await this.GetAsync(entity.Id);
 
         if (isValidEntity)
         {
-            DynamicParameters dynamicParameters = new();
-
-            dynamicParameters.Add("@id", entity.Id);
-            dynamicParameters.Add("@city", entity.City is null ? oldEntity.City : entity.City);
-            dynamicParameters.Add("@state", entity.State is null ? oldEntity.State : entity.State);
-            dynamicParameters.Add("@address", entity.Address is null ? oldEntity.Address : entity.Address);
-            dynamicParameters.Add("@id_client", entity.ClientId <= 0 ? oldEntity.ClientId : entity.ClientId);
-            dynamicParameters.Add("@neighborhood", entity.Neighborhood is null ? oldEntity.Neighborhood : entity.Neighborhood);
-
-            await connection.ExecuteAsync(SP_UPDATE_PUBLICAREA, dynamicParameters, commandType: CommandType.StoredProcedure);
+            await connection.ExecuteAsync
+            (
+                SP_UPDATE_PUBLICAREA, 
+                new{
+                    id = entity.Id,
+                    city = entity.City is null ? oldEntity.City : entity.City,
+                    state = entity.State is null ? oldEntity.State : entity.State,
+                    address = entity.Address is null ? oldEntity.Address : entity.Address,
+                    clientid = entity.ClientId <= 0 ? oldEntity.ClientId : entity.ClientId,
+                    neighborhood = entity.Neighborhood is null ? oldEntity.Neighborhood : entity.Neighborhood,
+                }, 
+                commandType: CommandType.StoredProcedure
+            );
 
             connection.Close();
         }
@@ -139,11 +142,7 @@ public sealed class PublicAreaRepository : IPublicAreaRepository
 
         if (isValidEntity)
         {
-            DynamicParameters dynamicParameters = new();
-
-            dynamicParameters.Add("@id", id);
-
-            await connection.ExecuteAsync(SP_DELETE_PUBLICAREA, dynamicParameters, commandType: CommandType.StoredProcedure);
+            await connection.ExecuteAsync(SP_DELETE_PUBLICAREA, new{id = id}, commandType: CommandType.StoredProcedure);
 
             connection.Close();
         }
