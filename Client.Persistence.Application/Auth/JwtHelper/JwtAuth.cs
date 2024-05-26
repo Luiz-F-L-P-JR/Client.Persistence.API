@@ -32,7 +32,7 @@ namespace Client.Persistence.API.Helper
                     new Claim(ClaimTypes.Role, RoleFactory(user.Role))
                 }),
 
-                Expires = DateTime.UtcNow.AddHours(2),
+                Expires = DateTime.UtcNow.AddHours(24),
 
                 SigningCredentials = new SigningCredentials
                 (
