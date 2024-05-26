@@ -47,7 +47,8 @@ public sealed class ClientRepository : IClientRepository
 
         if (data is List<Domain.Client.Model.Client>) return data;
 
-        return Enumerable.Empty<Domain.Client.Model.Client>();
+        _logger?.LogError(null, "No data found. Try again.");
+        throw new ArgumentException("No data found. Try again.");
     }
 
     public async Task<Domain.Client.Model.Client> GetAsync(int id)
@@ -69,7 +70,7 @@ public sealed class ClientRepository : IClientRepository
 
         if (data is Domain.Client.Model.Client) return data;
 
-        return Enumerable.Empty<Domain.Client.Model.Client>().FirstOrDefault();
+        throw new ArgumentException("No data found. Try again.");
     }
 
     public async Task<Domain.Client.Model.Client> GetWithPublicAreaAsync(int id)
@@ -82,12 +83,14 @@ public sealed class ClientRepository : IClientRepository
                             .Where(p => p.ClientId == id)
                             .ToList();
 
+        connection.Close();
+
         client.PublicAreas = publicAreas;
 
         if (client is Domain.Client.Model.Client) return client;
 
         _logger?.LogError(null, "No data found. Try again.");
-        throw new HttpRequestException("No data found. Try again.", null, HttpStatusCode.BadRequest);
+        throw new ArgumentException("No data found. Try again.");
     }
 
     public async Task CreateAsync(Domain.Client.Model.Client entity)
@@ -151,7 +154,7 @@ public sealed class ClientRepository : IClientRepository
         else
         {
             _logger?.LogError(null, "The client searched doesn't exist.");
-            throw new HttpRequestException("The client searched doesn't exist.", null, HttpStatusCode.BadRequest);
+            throw new ArgumentException("The client searched doesn't exist.");
         }
     }
 
@@ -159,7 +162,7 @@ public sealed class ClientRepository : IClientRepository
     {
         var connection = await _connection.GetSqlConnectionAsync();
 
-        bool isValidEntity = this.GetAllAsync().Result.ToList().Exists(e => e.Id == id);
+        bool isValidEntity = (await connection.GetAllAsync<Domain.Client.Model.Client>()).ToList().Exists(e => e.Id == id);
 
         if (isValidEntity)
         {
@@ -173,7 +176,7 @@ public sealed class ClientRepository : IClientRepository
         else
         {
             _logger?.LogError(null, "The client searched doesn't exist.");
-            throw new HttpRequestException("The client searched doesn't exist.", null, HttpStatusCode.BadRequest);
+            throw new ArgumentException("The client searched doesn't exist.");
         }
 
     }

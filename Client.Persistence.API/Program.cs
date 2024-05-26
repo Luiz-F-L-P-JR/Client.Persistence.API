@@ -1,5 +1,7 @@
 using Client.Persistence.API.Exension.ExceptionFilter;
 using Client.Persistence.API.Exension.IoC;
+using Client.Persistence.API.Exension.JwtAuthConfiguration;
+using Client.Persistence.API.Exension.SwaggerConfiguration;
 using Client.Persistence.Application.AutoMapping;
 using System.Text.Json.Serialization;
 
@@ -10,14 +12,18 @@ builder.Services.AddControllers(
     {
         options.Filters.Add(typeof(ExceptionFilter));
     }
-).AddJsonOptions(options =>
+)
+.AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerConfig();
+
+
 builder.Services.AddDependencyInjection();
+builder.AddJwtAuthConfiguration();
 
 builder.Services.AddAutoMapper(typeof(AutoMappingProfile));
 
@@ -30,6 +36,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
