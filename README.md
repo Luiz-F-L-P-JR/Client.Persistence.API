@@ -1,6 +1,6 @@
 # Client Persistence API
 
-Esta é uma API RESTful criada com .NET 8, utilizando uma arquitetura baseada em Domain-Driven Design (DDD) e o padrão Domain Model Design. A API gerencia clientes e seus respectivos logradouros, com endpoints autenticados e autorizados através de JWT. Ela utiliza Dapper e stored procedures, seguindo o padrão Repository Pattern.
+Esta é uma API RESTful criada com .NET 8, utilizando o padrão Domain Model Design. A API gerencia clientes e seus respectivos logradouros, com endpoints autenticados e autorizados. A persistêcia ocorre com o uso de stored procedures.
 
 ## Instalação e Execução
 
