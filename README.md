@@ -8,7 +8,7 @@ Siga estas etapas para configurar e executar a API localmente:
 
 ### Pré-requisitos
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/5.0)
+- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 - [Git](https://git-scm.com/)
 - Um banco de dados SQL Server
 
@@ -36,7 +36,13 @@ cd Client.Persistence.API
 dotnet run
 ```
 
-2. O projeto estará acessível nas rotas indicadas no arquivo launchSettings.json utilize http://localhost: e a número da porta.
+2. Execução no Visual Studio:
+
+```bash
+Aperte F5 ou clique no botão para a execução do na barra de configuração. 
+```
+
+3. O projeto estará acessível nas rotas indicadas no arquivo `launchSettings.json`, utilize `http://localhost:` e a número da porta.
 
 ## Contribuindo
 
