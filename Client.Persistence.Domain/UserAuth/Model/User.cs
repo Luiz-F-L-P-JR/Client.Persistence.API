@@ -35,5 +35,10 @@ namespace Client.Persistence.Domain.UserAuth.Model
         /// User role
         /// </summary>
         public AuthRoles? Role { get; set; }
+
+        public User()
+        {
+            Role = AuthRoles.Regular;
+        }
     }
 }
