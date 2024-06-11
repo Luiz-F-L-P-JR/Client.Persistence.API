@@ -131,9 +131,9 @@ public sealed class ClientRepository : IClientRepository
     {
         var connection = await _connection.GetSqlConnectionAsync();
 
-        bool isValidEntity = this.GetAllAsync().Result.ToList().Exists(e => e.Id == entity.Id);
+        bool isValidEntity = (await connection.GetAllAsync<Domain.Client.Model.Client>()).ToList().Exists(e => e.Id == entity.Id);
 
-        var oldEntity = await this.GetAsync(entity.Id);
+        var client = await this.GetCurrentPropertyUpdated(entity);
 
         if (isValidEntity)
         {
@@ -141,10 +141,10 @@ public sealed class ClientRepository : IClientRepository
             (
                 SP_UPDATE_CLIENT, 
                 new {
-                    id = entity.Id,
-                    name = entity.Name is null ? oldEntity.Name : entity.Name,
-                    email = entity.Email is null ? oldEntity.Email : entity.Email,
-                    logo = entity.Logo is null ? oldEntity.Logo : entity.Logo
+                    id = client.Id,
+                    name = client.Name,
+                    email = client.Email,
+                    logo = client.Logo
                 }, 
                 commandType: CommandType.StoredProcedure
             );
@@ -198,5 +198,17 @@ public sealed class ClientRepository : IClientRepository
         if (data > 0) return true;
 
         return false;
+    }
+
+    private async Task<Domain.Client.Model.Client> GetCurrentPropertyUpdated(Domain.Client.Model.Client entity){
+
+        var oldEntity = await this.GetAsync(entity.Id);
+
+        return new Domain.Client.Model.Client {
+            Id = entity.Id,
+            Name = entity.Name is null ? oldEntity.Name : entity.Name,
+            Email = entity.Email is null ? oldEntity.Email : entity.Email,
+            Logo = entity.Logo is null ? oldEntity.Logo : entity.Logo
+        };
     }
 }

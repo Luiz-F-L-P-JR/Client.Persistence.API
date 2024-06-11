@@ -107,7 +107,7 @@ public sealed class PublicAreaRepository : IPublicAreaRepository
 
         bool isValidEntity = (await connection.GetAllAsync<Domain.PublicArea.Model.PublicArea>()).ToList().Exists(e => e.Id == entity.Id);
 
-        var oldEntity = await this.GetAsync(entity.Id);
+        var publicArea = await this.GetCurrentPropertyUpdated(entity.Id);
 
         if (isValidEntity)
         {
@@ -115,12 +115,12 @@ public sealed class PublicAreaRepository : IPublicAreaRepository
             (
                 SP_UPDATE_PUBLICAREA, 
                 new{
-                    id = entity.Id,
-                    city = entity.City is null ? oldEntity.City : entity.City,
-                    state = entity.State is null ? oldEntity.State : entity.State,
-                    address = entity.Address is null ? oldEntity.Address : entity.Address,
-                    clientid = entity.ClientId <= 0 ? oldEntity.ClientId : entity.ClientId,
-                    neighborhood = entity.Neighborhood is null ? oldEntity.Neighborhood : entity.Neighborhood,
+                    id = publicArea.Id,
+                    city = publicArea.City,
+                    state = publicArea.State,
+                    address = publicArea.Address,
+                    clientid = publicArea.ClientId,
+                    neighborhood = publicArea.Neighborhood
                 }, 
                 commandType: CommandType.StoredProcedure
             );
@@ -151,5 +151,19 @@ public sealed class PublicAreaRepository : IPublicAreaRepository
             _logger?.LogError(null, "The public area searched doesn't exist.");
             throw new ArgumentException("The public area searched doesn't exist.");
         }
+    }
+
+    private async Task<Domain.PublicArea.Model.PublicArea> GetCurrentPropertyUpdated(Domain.PublicArea.Model.PublicArea entity){
+
+        var oldEntity = await this.GetAsync(entity.Id);
+
+        return new Domain.PublicArea.Model.PublicArea {
+            Id = entity.Id,
+            City = entity.City is null ? oldEntity.City : entity.City,
+            State = entity.State is null ? oldEntity.State : entity.State,
+            Address = entity.Address is null ? oldEntity.Address : entity.Address,
+            Clientid = entity.ClientId <= 0 ? oldEntity.ClientId : entity.ClientId,
+            Neighborhood = entity.Neighborhood is null ? oldEntity.Neighborhood : entity.Neighborhood,
+        };
     }
 }
