@@ -29,7 +29,7 @@ namespace Client.Persistence.API.Controllers
         {
             var publicAreas = await _applicationService.GetAllAsync();
 
-            return publicAreas is List<PublicAreaDTO> ? Ok(publicAreas.ToList()) : NotFound();
+            return publicAreas is List<PublicAreaDTO> ? Ok(publicAreas.ToList()) : BadRequest();
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Client.Persistence.API.Controllers
         {
             var publicArea = await _applicationService.GetAsync(id);
 
-            return publicArea is PublicAreaDTO ? Ok(publicArea) : NotFound();
+            return publicArea is PublicAreaDTO ? Ok(publicArea) : BadRequest();
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Client.Persistence.API.Controllers
                 return Created();
             }
 
-            return NotFound();
+            return BadRequest();
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Client.Persistence.API.Controllers
                 return NoContent();
             }
 
-            return NotFound();
+            return BadRequest();
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Client.Persistence.API.Controllers
                 return NoContent();
             }
 
-            return NotFound();
+            return BadRequest();
         }
     }
 }

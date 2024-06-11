@@ -30,7 +30,7 @@ namespace Client.Persistence.API.Controllers
         {
             var clients = await _applicationService.GetAllAsync();
 
-            return clients is List<ClientDTO> ? Ok(clients.ToList()) : NotFound();
+            return clients is List<ClientDTO> ? Ok(clients.ToList()) : BadRequest();
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Client.Persistence.API.Controllers
         {
             var client = await _applicationService.GetAsync(id);
 
-            return client is ClientDTO ? Ok(client) : NotFound();
+            return client is ClientDTO ? Ok(client) : BadRequest();
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Client.Persistence.API.Controllers
         {
             var client = await _applicationService.GetWithPublicAreaAsync(id);
 
-            return client is ClientDTO ? Ok(client) : NotFound();
+            return client is ClientDTO ? Ok(client) : BadRequest();
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Client.Persistence.API.Controllers
                 return Created();
             }
 
-            return NotFound();
+            return BadRequest();
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace Client.Persistence.API.Controllers
                 return NoContent();
             }
 
-            return NotFound();
+            return BadRequest();
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace Client.Persistence.API.Controllers
                 return NoContent();
             }
 
-            return NotFound();
+            return BadRequest();
         }
     }
 }
