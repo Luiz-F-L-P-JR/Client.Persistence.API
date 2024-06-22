@@ -30,7 +30,13 @@ builder.Services.AddAutoMapper(typeof(AutoMappingProfile));
 var app = builder.Build();
 
 app.UseSwagger();
-app.UseSwaggerUI();
+
+app.UseSwaggerUI
+(
+    s => s.InjectStylesheet("/swagger-ui/SwaggerDark.css")
+);
+
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 
