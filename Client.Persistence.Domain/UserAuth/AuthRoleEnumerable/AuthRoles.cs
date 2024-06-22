@@ -6,9 +6,8 @@ namespace Client.Persistence.Domain.AuthUser.AuthRoleEnumerable
     /// </summary>
     public enum AuthRoles
     {
-        
-        Menager = 1,
+        Regular = 1,
         Admin = 2,
-        Regular = 3
+        Menager = 3
     }
 }

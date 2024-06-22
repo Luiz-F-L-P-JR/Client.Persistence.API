@@ -21,7 +21,7 @@ namespace Client.Persistence.API.Controllers
         /// </summary>
         /// <returns>All Clients</returns>
         [HttpGet]
-        [Authorize(Roles = "Menager,Admin,Regular")]
+        [Authorize(Roles = "Menager, Admin, Regular")]
         [ProducesResponseType(typeof(IEnumerable<ClientDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -39,7 +39,7 @@ namespace Client.Persistence.API.Controllers
         /// <param name="id">Client identifier</param>
         /// <returns>A client</returns>
         [HttpGet("{id}")]
-        [Authorize(Roles = "Menager,Admin")]
+        [Authorize(Roles = "Menager, Admin")]
         [ProducesResponseType(typeof(ClientDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -57,7 +57,7 @@ namespace Client.Persistence.API.Controllers
         /// <param name="id"></param>
         /// <returns>A client with there specific public areas</returns>
         [HttpGet("publicArea/{id}")]
-        [Authorize(Roles = "Menager,Admin")]
+        [Authorize(Roles = "Menager, Admin")]
         [ProducesResponseType(typeof(ClientDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

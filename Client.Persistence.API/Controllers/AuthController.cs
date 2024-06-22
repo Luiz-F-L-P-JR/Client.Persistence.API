@@ -7,8 +7,8 @@ using System.Security.Claims;
 
 namespace Client.Persistence.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly IJwtAuth? _jwtAuth;
