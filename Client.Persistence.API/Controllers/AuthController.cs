@@ -30,6 +30,12 @@ namespace Client.Persistence.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody] User user)
         {
+            var userRegistered = await _userAuthRegister?.GetAsync(user?.Email?.ToLower());
+
+            if (userRegistered?.Name == user?.Name) {
+                return BadRequest("This e-mail is already registered, try again with another one.");
+            }
+
             if (user is User) {
                 await _userAuthRegister.CreateAsync(user);
                 return Created();
